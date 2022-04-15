@@ -24,6 +24,7 @@ import org.andresoviedo.util.android.FileUtils;
 import org.andresoviedo.util.view.TextActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -161,7 +162,54 @@ public class MenuActivity extends ListActivity {
 
         @Override
         protected List<String> doInBackground(Void... voids) {
-            return ContentUtils.getIndex(REPO_URL);
+            List<String> urlList = new ArrayList<>();
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/android.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/CH_NPC_Mob_Raptor_D_NDY.jpg");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cowboy.dae");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cowboy.png");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cube.bmp");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cube.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cube.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cube2.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/cube3.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/engranaje.stl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/face.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/muelle.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/Minotaur.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/penguin.bmp");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/penguin.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/penguin.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/polygon_with_holes.dae");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/Raptor-Attack.dae");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship.bmp");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship.png");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship2.bmp");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship2.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ship2.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/sphere.OBJ");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/spider.dae");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/stormtrooper.dae");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/Stormtrooper_D.jpg");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/teapot.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ToyPlane.bmp");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ToyPlane.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/ToyPlane.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/triangle.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck.jpg");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_dirty.jpg");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_dirty.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_dirty.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_dirty.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_red.jpg");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_red.mtl");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/truck_red.obj");
+            urlList.add("https://github.com/the3deers/android-3D-model-viewer/raw/master/models/parts/parts.index");
+//            return ContentUtils.getIndex(REPO_URL);
+            return urlList;
         }
 
         @Override
