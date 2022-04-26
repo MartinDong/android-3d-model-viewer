@@ -2,13 +2,15 @@
  * This object contains all the mesh data for an animated model that is to be loaded into the VAO.
  *
  * @author Karl
- *
  */
 
 package org.andresoviedo.android_3d_model_engine.services.gltf;
 
 import java.nio.FloatBuffer;
 
+/**
+ * Gltf 模型对象
+ */
 public class GltfModelData {
 
     private static final int DIMENSIONS = 3;
@@ -25,8 +27,8 @@ public class GltfModelData {
     private float[] vertexWeights;
 
     public GltfModelData(String id, float[] vertices, float[] textureCoords, float[] normals,
-                            float[] color, FloatBuffer colorsBuffer, String texture, int[] indices,
-                            int[] jointIds, float[] vertexWeights) {
+                         float[] color, FloatBuffer colorsBuffer, String texture, int[] indices,
+                         int[] jointIds, float[] vertexWeights) {
         this.id = id;
         this.vertices = vertices;
         this.textureCoords = textureCoords;
@@ -43,7 +45,7 @@ public class GltfModelData {
         return jointIds;
     }
 
-    public float[] getVertexWeights(){
+    public float[] getVertexWeights() {
         return vertexWeights;
     }
 
@@ -63,7 +65,7 @@ public class GltfModelData {
         return color;
     }
 
-    public FloatBuffer getColorsBuffer(){
+    public FloatBuffer getColorsBuffer() {
         return colorsBuffer;
     }
 

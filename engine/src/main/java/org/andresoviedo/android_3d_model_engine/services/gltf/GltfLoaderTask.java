@@ -3,20 +3,24 @@ package org.andresoviedo.android_3d_model_engine.services.gltf;
 import android.app.Activity;
 import android.net.Uri;
 
-import android.util.Log;
-
 import org.andresoviedo.android_3d_model_engine.model.Object3DData;
 import org.andresoviedo.android_3d_model_engine.services.LoaderTask;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.GltfModel;
+
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.net.URI;
 
-import org.andresoviedo.android_3d_model_engine.services.gltf.GltfLoader;
-
+/**
+ * gltf 装载器
+ * gltf 就是一种规范的数据格式，也就是说不管什么样的数据格式，后缀名，
+ * 都可以转换成gltf这种格式来进行加载。gltf立志成为一种通用格式。抹平各个格式之间的差异。
+ * https://blog.csdn.net/lz5211314121/article/details/117959088
+ *
+ * @author mogoauto
+ */
 public class GltfLoaderTask extends LoaderTask {
 
     GltfModel modelData;

@@ -3,6 +3,7 @@ package org.andresoviedo.android_3d_model_engine.drawer;
 import android.content.Context;
 import android.util.Log;
 
+
 import org.andresoviedo.android_3d_model_engine.R;
 import org.andresoviedo.android_3d_model_engine.model.AnimatedModel;
 import org.andresoviedo.android_3d_model_engine.model.Object3D;
@@ -14,26 +15,33 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 抽屉厂
+ *
+ * @author mogoauto
+ */
 public class DrawerFactory {
 
     /**
      * shader code loaded from raw resources
      * resources are cached on activity thread
+     * 从原始资源加载的着色器代码
+     * 资源缓存在活动线程上
      */
     private Map<String, String> shadersCode = new HashMap<>();
     /**
      * list of opengl drawers
+     * opengl抽屉列表
      */
     private Map<String, DrawerImpl> drawers = new HashMap<>();
 
     public DrawerFactory(Context context) throws IllegalAccessException, IOException {
-
         Log.i("DrawerFactory", "Discovering shaders...");
         Field[] fields = R.raw.class.getFields();
-        for (int count = 0; count < fields.length; count++) {
-            String shaderId = fields[count].getName();
+        for (Field field : fields) {
+            String shaderId = field.getName();
             Log.i("DrawerFactory", "Loading shader... " + shaderId);
-            int shaderResId = fields[count].getInt(fields[count]);
+            int shaderResId = field.getInt(field);
             byte[] shaderBytes = IOUtils.read(context.getResources().openRawResource(shaderResId));
             String shaderCode = new String(shaderBytes);
             shadersCode.put(shaderId, shaderCode);
@@ -44,27 +52,33 @@ public class DrawerFactory {
     public Object3D getDrawer(Object3DData obj, boolean usingTextures, boolean usingLights, boolean usingAnimation, boolean drawColors) {
 
         // double check features
+        // 双重检查功能
         boolean isAnimated = usingAnimation && obj instanceof AnimatedModel && ((AnimatedModel) obj).getAnimation() != null;
         boolean isUsingLights = usingLights && (obj.getNormals() != null || obj.getVertexNormalsArrayBuffer() != null);
         boolean isTextured = usingTextures && obj.getTextureData() != null && obj.getTextureCoordsArrayBuffer() != null;
         boolean isColoured = drawColors && obj != null && obj.getVertexColorsArrayBuffer() != null;
         boolean isEmissive = usingTextures && obj.getEmissiveTextureData() != null
-                                && obj.getEmissiveTextureCoordsArrayBuffer() != null;
+                && obj.getEmissiveTextureCoordsArrayBuffer() != null;
 
         // build shader id according to features
+        // 根据功能构建着色器id
         StringBuilder shaderIdBuilder = new StringBuilder("shader_");
         shaderIdBuilder.append(isAnimated ? "anim_" : "");
         shaderIdBuilder.append(isUsingLights ? "light_" : "");
         shaderIdBuilder.append(isTextured ? "texture_" : "");
         shaderIdBuilder.append(isColoured ? "colors_" : "");
-        shaderIdBuilder.append(isEmissive ? "emissive_": "");
+        shaderIdBuilder.append(isEmissive ? "emissive_" : "");
 
         // get cached drawer
+        //从抽屉里拿
         String shaderId = shaderIdBuilder.toString();
         DrawerImpl drawer = drawers.get(shaderId);
-        if (drawer != null) return drawer;
+        if (drawer != null) {
+            return drawer;
+        }
 
         // build drawer
+        //建造抽屉
         String vertexShaderCode = shadersCode.get(shaderId + "vert");
         String fragmentShaderCode = shadersCode.get(shaderId + "frag");
         if (vertexShaderCode == null || fragmentShaderCode == null) {

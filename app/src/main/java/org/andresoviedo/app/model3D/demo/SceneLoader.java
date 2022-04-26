@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * This class loads a 3D scena as an example of what can be done with the app
- *
+ * 这个类加载一个3D场景作为应用程序的示例
  * @author andresoviedo
  */
 public class SceneLoader implements LoaderTask.Callback {
@@ -214,7 +214,9 @@ public class SceneLoader implements LoaderTask.Callback {
             animateCamera();
         }
 
-        if (objects.isEmpty()) return;
+        if (objects.isEmpty()) {
+            return;
+        }
 
         if (doAnimation) {
             for (int i=0; i<objects.size(); i++) {
@@ -225,7 +227,9 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     private void animateLight() {
-        if (!rotatingLight) return;
+        if (!rotatingLight) {
+            return;
+        }
 
         // animate light - Do a complete rotation every 5 seconds.
         long time = SystemClock.uptimeMillis() % 5000L;

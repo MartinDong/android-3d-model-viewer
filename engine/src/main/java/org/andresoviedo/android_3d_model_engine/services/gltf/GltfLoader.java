@@ -1,23 +1,19 @@
 package org.andresoviedo.android_3d_model_engine.services.gltf;
 
-import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
 import org.andresoviedo.android_3d_model_engine.model.AnimatedModel;
 import org.andresoviedo.android_3d_model_engine.model.Object3DData;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.AccessorModel;
-import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.AnimationModel;
-import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.BufferModel;
-import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.BufferViewModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.GltfModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.ImageModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.MeshModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.MeshPrimitiveModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.NodeModel;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.SceneModel;
-import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.io.GltfModelReader;
 import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.TextureModel;
+import org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.io.GltfModelReader;
 import org.andresoviedo.android_3d_model_engine.services.wavefront.WavefrontLoader;
 
 import java.io.IOException;
@@ -25,33 +21,33 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Load glTF model data to inner data structure
+ * 将glTF模型数据加载到内部数据结构中
  *
  * @author wenlinm
  */
 public class GltfLoader {
 
     private static Map<String, Integer> keyHandleMap = new HashMap<>();
+    // 纹理关键字
     private static String[] textureKeys = {"baseColorTexture"
-                                            , "emissiveTexture"
-                                            , "occlusionTexture"
-                                            , "normalTexture"};
+            , "emissiveTexture"
+            , "occlusionTexture"
+            , "normalTexture"};
 
-    private  static Map<NodeModel, List<AnimatedModel>> nodeMap = new HashMap<>();
+    private static Map<NodeModel, List<AnimatedModel>> nodeMap = new HashMap<>();
 
     // read model data and fill in data in Object3DData structure
-    public static Object[] buildAnimatedModel(URI uri) throws IOException{
+    // 读取模型数据，在Object3DData结构中填充数据
+    public static Object[] buildAnimatedModel(URI uri) throws IOException {
 
 
         GltfModelReader gltfModelReader = new GltfModelReader();
@@ -60,36 +56,38 @@ public class GltfLoader {
         Log.d("GltfLoaderTask", uri.toString());
 
         //convert all primitives to Object3DData object
+        // 将所有原语转换为Object3DData对象
         List<Object3DData> ret = new ArrayList<>();
 //        bindKeyHandle();
 
         int index = 1;
 
         // traverse all scene and for each root node, do dfs
-        for (SceneModel scene : gltfModel.getSceneModels()){
-            for (NodeModel node : scene.getNodeModels()){
+        // 遍历所有场景，并对每个根节点执行DFS
+        for (SceneModel scene : gltfModel.getSceneModels()) {
+            for (NodeModel node : scene.getNodeModels()) {
                 traverseNode(node, ret, index);
                 index++;
             }
         }
 
-        return new Object[]{gltfModel,ret};
+        return new Object[]{gltfModel, ret};
 
     }
 
-    private static void traverseNode(NodeModel node, List<Object3DData> ret, int index){
+    private static void traverseNode(NodeModel node, List<Object3DData> ret, int index) {
         int i = 1;
-        for (MeshModel mesh : node.getMeshModels()){
-            for (MeshPrimitiveModel meshPrimitive : mesh.getMeshPrimitiveModels()){
-
-
+        for (MeshModel mesh : node.getMeshModels()) {
+            for (MeshPrimitiveModel meshPrimitive : mesh.getMeshPrimitiveModels()) {
                 // for each mesh primitive initialize animated model object which
                 // inherited from Object3DData to hold data
+                // 对于每个网格原语初始化从Object3DData继承来的动画模型对象来保存数据
                 AnimatedModel data3D = new AnimatedModel();
                 Map<String, AccessorModel> attriMap = meshPrimitive.getAttributes();
 
                 // for debug identification
-                if (mesh.getName() != null){
+                // 调试识别
+                if (mesh.getName() != null) {
                     data3D.setId(mesh.getName() + i);
                     i++;
                 } else {
@@ -98,23 +96,24 @@ public class GltfLoader {
 
                 // TODO: refactor to abstract this part
 
-                // for each mesh primitive, check each keywords and deal with the data
-                // correspondingly
+                // for each mesh primitive, check each keywords and deal with the data correspondingly
+                // 对于每个网格原语，检查每个关键字，并对数据进行相应处理
                 for (String key : attriMap.keySet()) {
-                    if (!isKeyValid(key))
+                    if (!isKeyValid(key)) {
                         continue;
+                    }
 
-                    // get accessor, bufferview, and buffer for vertex buffer, normal buffer
-                    // texture coordinate buffer
+                    // get accessor, bufferview, and buffer for vertex buffer, normal buffer  texture coordinate buffer
+                    // 获取访问器，bufferview，和缓冲区的顶点缓冲区，普通缓冲区纹理坐标缓冲区
                     AccessorModel accessor = attriMap.get(key);
 
-                    // TODO: add read of other types of buffer if needed
+                    // TODO: add read of other types of buffer if needed 如果需要，添加其他类型的缓冲区读取
                     Buffer dataB = accessor.getCorrBufferData();
                     FloatBuffer dataFB = null;
-                    if (dataB instanceof FloatBuffer){
-                        dataFB = (FloatBuffer)dataB;
-                    } else if (dataB instanceof ShortBuffer){
-                        ShortBuffer dataSB = (ShortBuffer)dataB;
+                    if (dataB instanceof FloatBuffer) {
+                        dataFB = (FloatBuffer) dataB;
+                    } else if (dataB instanceof ShortBuffer) {
+                        ShortBuffer dataSB = (ShortBuffer) dataB;
                         short[] shortArr = new short[dataSB.capacity()];
                         dataSB.get(shortArr);
                         ByteBuffer bb = ByteBuffer.allocate(shortArr.length * 2);
@@ -123,7 +122,7 @@ public class GltfLoader {
                     }
 
 //                    FloatBuffer dataFB = accessor.getCorrBufferData();
-                    if (key.equals("POSITION")){
+                    if (key.equals("POSITION")) {
                         transformVertices(data3D, node, dataFB);
                         data3D.setVertexArrayBuffer(dataFB);
                         float[] test = new float[dataFB.capacity()];
@@ -131,21 +130,21 @@ public class GltfLoader {
                         data3D.setVertices(test);
                     } else if (key.equals("NORMAL")) {
                         data3D.setVertexNormalsArrayBuffer(dataFB);
-                    } else if (key.startsWith("TEXCOORD_")){
+                    } else if (key.startsWith("TEXCOORD_")) {
                         data3D.addTextureCoords(key, dataFB);
-                    } else if (key.startsWith("COLOR_")){
+                    } else if (key.startsWith("COLOR_")) {
                         data3D.setVertexColorsArrayBuffer(dataFB);
-                    } else if (key.startsWith("JOINTS_")){
+                    } else if (key.startsWith("JOINTS_")) {
                         data3D.setJointIds(dataFB);
-                    } else if (key.startsWith("WEIGHTS_")){
+                    } else if (key.startsWith("WEIGHTS_")) {
                         data3D.setVertexWeights(dataFB);
                     }
                 }
 
                 // if this mesh primitive describe indexed geometry, store draw order buffer
+                // 如果这个网格原语描述了索引几何体，存储绘制顺序缓冲区
                 AccessorModel indices = meshPrimitive.getIndices();
-                if (indices!=null)
-                {
+                if (indices != null) {
                     Buffer indexBuffer = indices.getCorrBufferData();
 
                     data3D.setDrawOrder(indexBuffer);
@@ -153,7 +152,7 @@ public class GltfLoader {
                     data3D.setDrawUsingArrays(false);
                 }
 
-                // TODO: add technique model to shader for realistic PBR
+                // TODO: add technique model to shader for realistic PBR 为现实的PBR添加技术模型着色器
 //                TechniqueModel test2 = meshPrimitive.getMaterialModel().getTechniqueModel();
 
                 data3D.setGltfMaterial(meshPrimitive.getMaterialModel());
@@ -165,7 +164,7 @@ public class GltfLoader {
                 ret.add(data3D);
                 // add Object3DData correspond with node for adding animation in
                 // populatedAnimatedModel
-                if (!nodeMap.containsKey(node)){
+                if (!nodeMap.containsKey(node)) {
                     List<AnimatedModel> data3dList = new ArrayList<>();
                     nodeMap.put(node, data3dList);
                 }
@@ -173,20 +172,19 @@ public class GltfLoader {
             }
         }
 
-        if (node.getChildren().isEmpty() == true){
+        if (node.getChildren().isEmpty() == true) {
             return;
         } else {
-            for (NodeModel child : node.getChildren()){
+            for (NodeModel child : node.getChildren()) {
                 traverseNode(child, ret, ++index);
             }
         }
     }
 
 
+    public static void populateAnimatedModel(URL url, List<Object3DData> datas, GltfModel modelData) {
 
-    public static void populateAnimatedModel(URL url, List<Object3DData> datas, GltfModel modelData){
-
-        for (int i=0; i<datas.size(); i++) {
+        for (int i = 0; i < datas.size(); i++) {
             Object3DData data = datas.get(i);
 
             FloatBuffer normalsBuffer = data.getVertexNormalsArrayBuffer();
@@ -226,14 +224,14 @@ public class GltfLoader {
     }
 
 
-    private static void bindTexture(Object3DData data, GltfModel gltfModel){
+    private static void bindTexture(Object3DData data, GltfModel gltfModel) {
         List<TextureModel> textures = gltfModel.getTextureModels();
-        Map<String,Object> materialValueMap = data.getGltfMaterial().getValues();
+        Map<String, Object> materialValueMap = data.getGltfMaterial().getValues();
 
         // Default Texture
-        if (materialValueMap.get("baseColorTexture") != null){
-            Integer index = (Integer)materialValueMap.get("baseColorTexture");
-            String texCordKey = (String)materialValueMap.get("baseColorTexCoord");
+        if (materialValueMap.get("baseColorTexture") != null) {
+            Integer index = (Integer) materialValueMap.get("baseColorTexture");
+            String texCordKey = (String) materialValueMap.get("baseColorTexCoord");
             data.setTextureCoordsArrayBuffer(data.getTextureCoords(texCordKey));
             TextureModel baseColorTexture = textures.get(index);
             ImageModel image = baseColorTexture.getImageModel();
@@ -247,9 +245,9 @@ public class GltfLoader {
         }
 
         // Emissive Texture
-        if (materialValueMap.get("emissiveTexture") != null){
-            Integer index = (Integer)materialValueMap.get("emissiveTexture");
-            String texCordKey = (String)materialValueMap.get("emissiveTexCoord");
+        if (materialValueMap.get("emissiveTexture") != null) {
+            Integer index = (Integer) materialValueMap.get("emissiveTexture");
+            String texCordKey = (String) materialValueMap.get("emissiveTexCoord");
             data.setEmissiveTextureCoordsArrayBuffer(data.getTextureCoords(texCordKey));
             TextureModel emissiveTexture = textures.get(index);
             ImageModel image = emissiveTexture.getImageModel();
@@ -261,23 +259,25 @@ public class GltfLoader {
             data.setEmissiveTextureWrap(emissiveTexture.getWrapS(), emissiveTexture.getWrapT());
         }
 
-        if (materialValueMap.get("occlusionTexture") != null){
+        if (materialValueMap.get("occlusionTexture") != null) {
 
         }
 
-        if (materialValueMap.get("normalTexture") != null){
+        if (materialValueMap.get("normalTexture") != null) {
 
         }
-        data.setColor((float[])materialValueMap.get("baseColorFactor"));
-        data.setIsDoubleSided((Integer)materialValueMap.get("isDoubleSided"));
+        data.setColor((float[]) materialValueMap.get("baseColorFactor"));
+        data.setIsDoubleSided((Integer) materialValueMap.get("isDoubleSided"));
     }
 
-    private static FloatBuffer transformVertices(Object3DData obj, NodeModel node, FloatBuffer dataFB){
+    private static FloatBuffer transformVertices(Object3DData obj, NodeModel node, FloatBuffer dataFB) {
 
         // model matrix of the node
+        // 节点的模型矩阵
         obj.setModelMatrix(node.getMatrix());
 
         // if model matrix is not assigned, use translation, rotation, and scale attribute
+        // 如果没有分配模型矩阵，使用平移、旋转和缩放属性
         obj.setScale(node.getScale());
         obj.setRotation(node.getRotation());
         obj.setPosition(node.getTranslation());
@@ -295,16 +295,15 @@ public class GltfLoader {
         return dataFB;
     }
 
-    private static boolean isKeyValid(String key){
+    private static boolean isKeyValid(String key) {
         return key.equals("POSITION") || key.equals("NORMAL")
                 || key.startsWith("TEXCOORD_") || key.startsWith("COLOR_")
                 || key.startsWith("JOINTS_") || key.startsWith("WEIGHTS_");
     }
 
 
-
-    private static byte[] byteBufferToByte(ByteBuffer byteBuffer){
-        if (byteBuffer == null){
+    private static byte[] byteBufferToByte(ByteBuffer byteBuffer) {
+        if (byteBuffer == null) {
             return null;
         }
         byte[] arr = new byte[byteBuffer.remaining()];

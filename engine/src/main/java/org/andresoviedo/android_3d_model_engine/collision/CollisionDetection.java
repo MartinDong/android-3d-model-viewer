@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Class that encapsulates all the logic for the collision detection algorithm.
+ * 类，该类封装了碰撞检测算法的所有逻辑。
  *
  * @author andresoviedo
  */
@@ -19,15 +20,16 @@ public class CollisionDetection {
 
     /**
      * Get the nearest object intersected by the specified window coordinates
+     * 获取与指定窗口坐标相交的最近对象
      *
-     * @param objects               the list of objects to test
-     * @param height                viewport height
-     * @param width                 viewport width
-     * @param modelViewMatrix       model view matrix
-     * @param modelProjectionMatrix model projection matrix
-     * @param windowX               the window x coordinate
-     * @param windowY               the window y coordinate
-     * @return the nearest object intersected by the specified coordinates or null
+     * @param objects               the list of objects to test     要测试的对象列表
+     * @param height                viewport height                 视口高度
+     * @param width                 viewport width                  视口宽度
+     * @param modelViewMatrix       model view matrix               模型视图矩阵
+     * @param modelProjectionMatrix model projection matrix         模型投影矩阵
+     * @param windowX               the window x coordinate         窗口x坐标
+     * @param windowY               the window y coordinate         窗口的y坐标
+     * @return the nearest object intersected by the specified coordinates or null 与指定坐标或空坐标相交的最近对象
      */
     public static Object3DData getBoxIntersection(List<Object3DData> objects, int width, int height, float[] modelViewMatrix, float[] modelProjectionMatrix, float windowX, float windowY) {
         float[] nearHit = unProject(width, height, modelViewMatrix, modelProjectionMatrix, windowX, windowY, 0);
@@ -39,11 +41,12 @@ public class CollisionDetection {
 
     /**
      * Get the nearest object intersected by the specified ray or null if no object is intersected
+     * 获取与指定光线相交的最近对象，如果没有对象相交，则获取null
      *
-     * @param objects   the list of objects to test
-     * @param p1        the ray start point
-     * @param direction the ray direction
-     * @return the object intersected by the specified ray
+     * @param objects   the list of objects to test 要测试的对象列表
+     * @param p1        the ray start point         光线的起点
+     * @param direction the ray direction           射线方向
+     * @return the object intersected by the specified ray 与指定光线相交的对象
      */
     private static Object3DData getBoxIntersection(List<Object3DData> objects, float[] p1, float[] direction) {
         float min = Float.MAX_VALUE;
@@ -67,7 +70,7 @@ public class CollisionDetection {
 
     /*
      * Get the entry and exit point of the ray intersecting the nearest object or null if no object is intersected
-     *
+     * 获取与最近对象相交的光线的入口和出口点，如果没有对象相交，则获取null
      * @param objects list of objects to test
      * @param p1      ray start point
      * @param p2      ray end point
@@ -97,11 +100,12 @@ public class CollisionDetection {
 
     /**
      * Return true if the specified ray intersects the bounding box
+     * 如果指定的光线与边界框相交，则返回true
      *
-     * @param origin origin of the ray
-     * @param dir    direction of the ray
-     * @param b      bounding box
-     * @return true if the specified ray intersects the bounding box, false otherwise
+     * @param origin origin of the ray      射线的起源
+     * @param dir    direction of the ray   射线的方向
+     * @param b      bounding box           包围盒
+     * @return true if the specified ray intersects the bounding box, false otherwise 如果指定的光线与边界框相交，则为true，否则为false
      */
     private static boolean isBoxIntersection(float[] origin, float[] dir, BoundingBox b) {
         float[] intersection = getBoxIntersection(origin, dir, b);
@@ -110,11 +114,12 @@ public class CollisionDetection {
 
     /**
      * Get the intersection points of the near and far plane for the specified ray and bounding box
+     * 获取指定光线和边界框的近平面和远平面的交点
      *
-     * @param origin the ray origin
-     * @param dir    the ray direction
-     * @param b      the bounding box
-     * @return the intersection points of the near and far plane
+     * @param origin the ray origin         射线起源
+     * @param dir    the ray direction      射线方向
+     * @param b      the bounding box       边界框
+     * @return the intersection points of the near and far plane 近平面和远平面的交点
      */
     private static float[] getBoxIntersection(float[] origin, float[] dir, BoundingBox b) {
         float[] tMin = Math3DUtils.divide(Math3DUtils.substract(b.getMin(), origin), dir);
@@ -128,15 +133,16 @@ public class CollisionDetection {
 
     /**
      * Map window coordinates to object coordinates.
+     * 将窗口坐标映射到对象坐标。
      *
-     * @param height                viewport height
-     * @param width                 viewport width
-     * @param modelViewMatrix       model view matrix
-     * @param modelProjectionMatrix model projection matrix
-     * @param rx                    x point
-     * @param ry                    y point
-     * @param rz                    z point
-     * @return the corresponding near and far vertex for the specified window coordinates
+     * @param height                viewport height         视口高度
+     * @param width                 viewport width          视口宽度
+     * @param modelViewMatrix       model view matrix       模型视图矩阵
+     * @param modelProjectionMatrix model projection matrix 模型投影矩阵
+     * @param rx                    x point                 x点
+     * @param ry                    y point                 y点
+     * @param rz                    z point                 z点
+     * @return the corresponding near and far vertex for the specified window coordinates 指定窗口坐标对应的近顶点和远顶点
      */
     private static float[] unProject(int width, int height, float[] modelViewMatrix, float[] modelProjectionMatrix,
                                      float rx, float ry, float rz) {
@@ -191,6 +197,18 @@ public class CollisionDetection {
         return null;
     }*/
 
+    /**
+     * 得到三角形交点
+     *
+     * @param objects
+     * @param width
+     * @param height
+     * @param modelViewMatrix
+     * @param modelProjectionMatrix
+     * @param windowX
+     * @param windowY
+     * @return
+     */
     public static float[] getTriangleIntersection(List<Object3DData> objects, int width, int height, float[] modelViewMatrix, float[] modelProjectionMatrix, float windowX, float windowY) {
         float[] nearHit = unProject(width, height, modelViewMatrix, modelProjectionMatrix, windowX, windowY, 0);
         float[] farHit = unProject(width, height, modelViewMatrix, modelProjectionMatrix, windowX, windowY, 1);
@@ -219,6 +237,14 @@ public class CollisionDetection {
         return null;
     }
 
+    /**
+     * 求八叉树的三角形交点
+     *
+     * @param octree
+     * @param rayOrigin
+     * @param rayDirection
+     * @return
+     */
     private static float getTriangleIntersectionForOctree(Octree octree, float[] rayOrigin, float[] rayDirection) {
         //Log.v("CollisionDetection","Testing octree "+octree);
         if (!isBoxIntersection(rayOrigin, rayDirection, octree.boundingBox)) {
@@ -260,6 +286,16 @@ public class CollisionDetection {
         return -1;
     }
 
+    /**
+     * 得到三角形交点
+     *
+     * @param rayOrigin
+     * @param rayVector
+     * @param vertex0
+     * @param vertex1
+     * @param vertex2
+     * @return
+     */
     private static float getTriangleIntersection(float[] rayOrigin,
                                                  float[] rayVector,
                                                  float[] vertex0, float[] vertex1, float[] vertex2) {
@@ -270,25 +306,35 @@ public class CollisionDetection {
         edge2 = Math3DUtils.substract(vertex2, vertex0);
         h = Math3DUtils.crossProduct(rayVector, edge2);
         a = Math3DUtils.dotProduct(edge1, h);
-        if (a > -EPSILON && a < EPSILON)
+        if (a > -EPSILON && a < EPSILON) {
             return -1;
+        }
         f = 1 / a;
         s = Math3DUtils.substract(rayOrigin, vertex0);
         u = f * Math3DUtils.dotProduct(s, h);
-        if (u < 0.0 || u > 1.0)
+        if (u < 0.0 || u > 1.0) {
             return -1;
+        }
         q = Math3DUtils.crossProduct(s, edge1);
         v = f * Math3DUtils.dotProduct(rayVector, q);
-        if (v < 0.0 || u + v > 1.0)
+        if (v < 0.0 || u + v > 1.0) {
             return -1;
+        }
         // At this stage we can compute t to find out where the intersection point is on the line.
+        //在这个阶段，我们可以计算t来找出交点在这条线上的位置。
         float t = f * Math3DUtils.dotProduct(edge2, q);
-        if (t > EPSILON) // ray intersection
+        if (t > EPSILON)
+        // ray intersection
+        //射线交叉
         {
             Log.d("CollisionDetection", "Triangle intersection at: " + t);
             return t;
-        } else // This means that there is a line intersection but not a ray intersection.
+        } else
+        // This means that there is a line intersection but not a ray intersection.
+        //这意味着存在直线交点，但不存在光线交点。
+        {
             return -1;
+        }
     }
 }
 

@@ -2,7 +2,6 @@ package org.andresoviedo.android_3d_model_engine.services.collada;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.util.Log;
 
 import org.andresoviedo.android_3d_model_engine.model.Object3DData;
 import org.andresoviedo.android_3d_model_engine.services.LoaderTask;
@@ -13,6 +12,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * 交互式3D 应用程序的基于 XML 的数字资产交换方案 装载机任务
+ *
+ * @author mogoauto
+ */
 public class ColladaLoaderTask extends LoaderTask {
 
     AnimatedModelData modelData;

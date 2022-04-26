@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * + STL loader supported by the org.j3d STL parser
+ * + STL加载器支持的 org.j3d STL解析器
  *
  * @author andresoviedo
  */
@@ -33,6 +34,7 @@ public final class STLLoaderTask extends LoaderTask {
     @Override
     protected List<Object3DData> build() throws IOException {
         // Parse STL
+        // 解析 STL
         this.stlFileReader = new STLFileReader(new URL(uri.toString()));
         int totalFaces = stlFileReader.getNumOfFacets()[0];
         Log.i("STLLoaderTask", "Num of objects: " + stlFileReader.getNumOfObjects());
@@ -40,13 +42,15 @@ public final class STLLoaderTask extends LoaderTask {
         Log.i("STLLoaderTask", "Parsing messages: " + stlFileReader.getParsingMessages());
 
         // Allocate data
+        // 分配数据
         FloatBuffer normalsBuffer = createNativeByteBuffer(totalFaces * 3 * 3 * 4).asFloatBuffer();
         FloatBuffer vertexBuffer = createNativeByteBuffer(totalFaces * 3 * 3 * 4).asFloatBuffer();
 
         // Initialize model dimensions (needed by the Object3DData#scaleCenter()
+        // 初始化模型尺寸(Object3DData#scaleCenter()需要)
         WavefrontLoader.ModelDimensions modelDimensions = new WavefrontLoader.ModelDimensions();
 
-        // notify succeded!
+        // notify succeded! 通知成功!
         Object3DData data3D = new Object3DData(vertexBuffer).setVertexNormalsArrayBuffer(normalsBuffer);
         data3D.setDimensions(modelDimensions);
         data3D.setDrawUsingArrays(true);
@@ -65,7 +69,7 @@ public final class STLLoaderTask extends LoaderTask {
 
             Object3DData data = datas.get(0);
 
-            // Parse all facets...
+            // Parse all facets... 解析所有面……
             double[] normal = new double[3];
             double[][] vertices = new double[3][3];
             int normalCounter = 0, vertexCounter = 0;
@@ -97,7 +101,7 @@ public final class STLLoaderTask extends LoaderTask {
                 vertexBuffer.put(vertexCounter++, (float) vertices[2][1]);
                 vertexBuffer.put(vertexCounter++, (float) vertices[2][2]);
 
-                // update model dimensions
+                // update model dimensions 更新模型尺寸
                 if (first) {
                     modelDimensions.set((float) vertices[0][0], (float) vertices[0][1], (float) vertices[0][2]);
                     first = false;
@@ -124,8 +128,10 @@ public final class STLLoaderTask extends LoaderTask {
 
     private static ByteBuffer createNativeByteBuffer(int length) {
         // initialize vertex byte buffer for shape coordinates
+        // 初始化形状坐标的顶点字节缓冲区
         ByteBuffer bb = ByteBuffer.allocateDirect(length);
         // use the device hardware's native byte order
+        // 使用设备硬件的本机字节顺序
         bb.order(ByteOrder.nativeOrder());
         return bb;
     }

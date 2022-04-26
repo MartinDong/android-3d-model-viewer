@@ -1,5 +1,10 @@
 package org.andresoviedo.android_3d_model_engine.services.collada.entities;
 
+/**
+ * 骨架数据
+ *
+ * @author mogoauto
+ */
 public class SkeletonData {
 
     public final int jointCount;

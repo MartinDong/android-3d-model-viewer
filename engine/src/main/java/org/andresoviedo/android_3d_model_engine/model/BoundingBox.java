@@ -5,9 +5,10 @@ import android.opengl.Matrix;
 import java.nio.FloatBuffer;
 
 /**
+ * 包围盒
+ *
  * @author andresoviedo
  */
-
 public final class BoundingBox {
 
     private final String id;
@@ -50,8 +51,8 @@ public final class BoundingBox {
         }
         float[] min = new float[]{xMin, yMin, zMin, 1};
         float[] max = new float[]{xMax, yMax, zMax, 1};
-        Matrix.multiplyMV(min,0,modelMatrix,0,min,0);
-        Matrix.multiplyMV(max,0,modelMatrix,0,max,0);
+        Matrix.multiplyMV(min, 0, modelMatrix, 0, min, 0);
+        Matrix.multiplyMV(max, 0, modelMatrix, 0, max, 0);
         return new BoundingBox(id, min[0], max[0], min[1], max[1], min[2], max[2]);
     }
 

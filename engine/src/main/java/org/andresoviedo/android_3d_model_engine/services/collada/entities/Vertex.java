@@ -1,5 +1,10 @@
 package org.andresoviedo.android_3d_model_engine.services.collada.entities;
 
+/**
+ * 角顶
+ *
+ * @author mogoauto
+ */
 public class Vertex {
 
     private static final int NO_INDEX = -1;

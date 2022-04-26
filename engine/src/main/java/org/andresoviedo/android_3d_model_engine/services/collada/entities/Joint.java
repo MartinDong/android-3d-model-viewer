@@ -13,22 +13,40 @@ import java.util.List;
  * joint is loaded up to. It also contains the name of the bone, and a list of
  * all the child joints.
  * <p>
+ * 表示“骨架”中的关节。它包含关节的索引，该索引确定该关节的关节矩阵在顶点着色器均匀数组中的位置
+ * 关节加载至。它还包含骨骼的名称和骨骼的列表
+ * 所有的儿童关节。
+ * <p>
  * The "animatedTransform" matrix is the joint transform that I keep referring
  * to in the tutorial. This is the transform that gets loaded up to the vertex
  * shader and is used to transform vertices. It is a model-space transform that
  * transforms the joint from it's bind (original position, no animation applied)
  * position to it's current position in the current pose. Changing this
  * transform changes the position/rotation of the joint in the animated entity.
+ * “动画变换”矩阵是我一直提到的关节变换
+ * 要在教程中添加。这是加载到顶点的变换
+ * 着色器，用于变换顶点。这是一种模型空间变换
+ * 从关节的绑定（原始位置，未应用动画）变换关节
+ * 定位到当前姿势中的当前位置。改变这个
+ * “变换”更改动画实体中关节的位置/旋转。
  * <p>
  * The two other matrices are transforms that are required to calculate the
  * "animatedTransform" in the {@link org.andresoviedo.android_3d_model_engine.animation.Animator}
  * class. It also has the local bind
  * transform which is the original (no pose/animation applied) transform of the
  * joint relative to the parent joint (in bone-space).
+ * 另外两个矩阵是计算矩阵所需的变换
+ * {@link org.andresoviedo.android_3d_model_engine.animation.Animator}中的“动画转换”
+ * 班它还具有本地绑定
+ * transform，它是原始的（未应用姿势/动画）变换
+ * 相对于父关节的关节（在骨骼空间中）。
  * <p>
  * The "bindLocalTransform" is the original (bind) transform of the joint
  * relative to its parent (in bone-space). The inverseBindTransform is that bind
  * transform in model-space, but inversed.
+ * “bindLocalTransform”是关节的原始（绑定）变换
+ * 相对于其父对象（在骨骼空间中）。逆宾得变换就是这个绑定
+ * 在模型空间中变换，但反向。
  *
  * @author Karl
  */
@@ -56,7 +74,7 @@ public class Joint {
         this.name = name;
         this.bindLocalTransform = bindLocalTransform;
         this.inverseBindTransform = inverseBindTransform;
-        Matrix.setIdentityM(animatedTransform,0);
+        Matrix.setIdentityM(animatedTransform, 0);
     }
 
     public int getIndex() {
@@ -154,8 +172,8 @@ public class Joint {
     @Override
     public Joint clone() {
         final Joint ret = new Joint(this.index, this.name, this.bindLocalTransform.clone(), this.inverseBindTransform !=
-                null? this.inverseBindTransform.clone() : null);
-        for (final Joint child : this.children){
+                null ? this.inverseBindTransform.clone() : null);
+        for (final Joint child : this.children) {
             ret.addChild(child.clone());
         }
         return ret;

@@ -16,7 +16,6 @@ import org.andresoviedo.android_3d_model_engine.services.wavefront.WavefrontLoad
 import org.andresoviedo.android_3d_model_engine.services.wavefront.WavefrontLoader.Materials;
 import org.andresoviedo.android_3d_model_engine.services.wavefront.WavefrontLoader.Tuple3;
 import org.andresoviedo.util.android.ContentUtils;
-import org.andresoviedo.util.io.IOUtils;
 import org.andresoviedo.util.math.Math3DUtils;
 
 import java.io.BufferedReader;
@@ -31,11 +30,15 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+/**
+ * 3D 对象构造器
+ */
 public final class Object3DBuilder {
 
 	private static final int COORDS_PER_VERTEX = 3;
 	/**
 	 * Default vertices colors
+	 * 默认的顶点颜色
 	 */
 	private static float[] DEFAULT_COLOR = {1.0f, 1.0f, 0, 1.0f};
 

@@ -19,6 +19,7 @@ import java.util.Set;
 
 /**
  * Draw using single color, texture and skeleton and no light
+ * 使用单一颜色、纹理和骨架绘制，不使用灯光
  *
  * @author andresoviedo
  */
@@ -30,23 +31,29 @@ class DrawerImpl implements Object3D {
     private final static float[] NO_COLOR_MASK = {1.0f, 1.0f, 1.0f, 1.0f};
 
     // specification
+    // 规格
     private final String id;
     private final Set<String> features;
 
     // opengl program
+    // opengl程序
     private final int mProgram;
 
     // temporary variables
+    // 临时变量
     private final float[] mMatrix = new float[16];
     private final float[] mvMatrix = new float[16];
     private final float[] mvpMatrix = new float[16];
 
     // animation data
     // put 0 to draw progressively, -1 to draw at once
+    // 动画数据
+    // 让0逐步绘制，-1立即绘制
     private long counter = -1;
     private double shift = -1d;
 
     // does the device support drawElements for GL_UNSIGNED_INT or not?
+    // 设备是否支持用于GL_UNSIGNED_INT的抽屉元素？
     private boolean drawUsingUnsignedInt = true;
 
     private final SparseArray<String> cache1 = new SparseArray<>();
@@ -109,6 +116,7 @@ class DrawerImpl implements Object3D {
 
 
         // Add program to OpenGL environment
+        // 将程序添加到OpenGL环境
         GLES20.glUseProgram(mProgram);
 
         float[] mMatrix = getMMatrix(obj);
@@ -137,6 +145,7 @@ class DrawerImpl implements Object3D {
         setColorMask(colorMask);
 
         // TODO: refactor code here for not using both texture and emissiveTexture
+        // TODO:重构代码，避免同时使用纹理和emissiveTexture
         int mTextureHandle = -1;
         if (textureId != -1 && supportsTextures()) {
             mTextureHandle = setTexture(obj, textureId);
@@ -144,21 +153,24 @@ class DrawerImpl implements Object3D {
 
 
         int mEmissiveTextureHandle = -1;
-        if (obj.getEmissiveTextureHandle() != -1 && supportsEmissiveTexture()){
+        if (obj.getEmissiveTextureHandle() != -1 && supportsEmissiveTexture()) {
             mEmissiveTextureHandle = setEmissiveTexture(obj);
         }
 
         // light rendering needs mv matrix
+        // 灯光渲染需要mv矩阵
         if (supportsMvMatrix()) {
             setMvMatrix(mvMatrix);
         }
 
         // TODO: remove this null check
+        // TODO:删除此空检查
         if (lightPos != null && supportsLighting()) {
             setLightPos(lightPos);
         }
 
         // joint transformation for animated model
+        // 动画模型的联合变换
         int in_weightsHandle = -1;
         int in_jointIndicesHandle = -1;
         if (supportsJoints() && obj instanceof AnimatedModel) {
@@ -196,15 +208,15 @@ class DrawerImpl implements Object3D {
             GLES20.glDisableVertexAttribArray(in_jointIndicesHandle);
         }
 
-        if (!obj.getIsDoubleSided()){
+        if (!obj.getIsDoubleSided()) {
             GLES20.glDisable(GLES20.GL_CULL_FACE);
         }
 
     }
 
     private float[] getMMatrix(Object3DData obj) {
-
         // calculate object transformation
+        // 计算对象变换
         Matrix.setIdentityM(mMatrix, 0);
         if (obj.getRotation() != null) {
             Matrix.rotateM(mMatrix, 0, obj.getRotation()[0], 1f, 0f, 0f);
@@ -231,12 +243,13 @@ class DrawerImpl implements Object3D {
     }
 
     private void setMvpMatrix(float[] mvpMatrix) {
-
         // get handle to shape's transformation matrix
+        // 掌握形状的变换矩阵
         int mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVPMatrix");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation
+        // 应用投影和视图变换
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         GLUtil.checkGlError("glUniformMatrix4fv");
     }
@@ -248,6 +261,7 @@ class DrawerImpl implements Object3D {
     private void setColor(Object3DData obj) {
 
         // get handle to fragment shader's vColor member
+        // 获取片段着色器的vColor成员的句柄
         int mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
         GLUtil.checkGlError("glGetUniformLocation");
 
@@ -263,10 +277,12 @@ class DrawerImpl implements Object3D {
     private int setColors(Object3DData obj) {
 
         // get handle to fragment shader's vColor member
+        // 获取片段着色器的vColor成员的句柄
         int mColorHandle = GLES20.glGetAttribLocation(mProgram, "a_Color");
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Pass in the color information
+        // 传递颜色信息
         GLES20.glEnableVertexAttribArray(mColorHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
@@ -280,10 +296,12 @@ class DrawerImpl implements Object3D {
     private int setPosition(Object3DData obj) {
 
         // get handle to vertex shader's a_Position member
+        // 获取顶点着色器的一个位置成员的句柄
         int mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Enable a handle to the triangle vertices
+        // 启用三角形顶点的控制柄
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
@@ -309,6 +327,7 @@ class DrawerImpl implements Object3D {
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Pass in the normal information
+        // 传递正常信息
         FloatBuffer buffer = obj.getVertexNormalsArrayBuffer() != null ? obj.getVertexNormalsArrayBuffer() : obj.getNormals();
         buffer.position(0);
         GLES20.glVertexAttribPointer(mNormalHandle, 3, GLES20.GL_FLOAT, false, 0, buffer);
@@ -323,6 +342,7 @@ class DrawerImpl implements Object3D {
     private void setLightPos(float[] lightPosInEyeSpace) {
         int mLightPosHandle = GLES20.glGetUniformLocation(mProgram, "u_LightPos");
         // Pass in the light position in eye space.
+        // 在眼睛空间的光线位置通过。
         GLES20.glUniform3f(mLightPosHandle, lightPosInEyeSpace[0], lightPosInEyeSpace[1], lightPosInEyeSpace[2]);
     }
 
@@ -335,6 +355,7 @@ class DrawerImpl implements Object3D {
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Pass in the modelview matrix.
+        // 传入modelview矩阵。
         GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, mvMatrix, 0);
         GLUtil.checkGlError("glUniformMatrix4fv");
     }
@@ -357,31 +378,37 @@ class DrawerImpl implements Object3D {
     }
 
     // TODO: refactor to remove duplicate code
+    // TODO:重构以删除重复代码
     private int setEmissiveTexture(Object3DData obj) {
         // TODO: add emissive texture
+        // TODO:添加发射纹理
         int mEmissiveTextureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_EmissiveTexture");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Set the active texture unit to texture unit 1.
+        // 将活动纹理单元设置为纹理单元1。
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
         GLUtil.checkGlError("glActiveTexture");
 
-        if (!obj.getIsDoubleSided()){
+        if (!obj.getIsDoubleSided()) {
             GLES20.glCullFace(GLES20.GL_BACK);
             GLES20.glEnable(GLES20.GL_CULL_FACE);
         }
 
         // Bind to the texture in OpenGL
+        // 在OpenGL中绑定到纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, obj.getEmissiveTextureHandle());
         GLUtil.checkGlError("glBindTexture");
 
         // set sampling and filtering
+        // 设置采样和过滤
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, obj.getEmissiveTextureMinFilter());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, obj.getEmissiveTextureMagFilter());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, obj.getEmissiveTextureWrapS());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, obj.getEmissiveTextureWrapT());
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
+        // 通过绑定到纹理单元0，告诉纹理均匀采样器在着色器中使用此纹理。
         GLES20.glUniform1i(mEmissiveTextureUniformHandle, 1);
         GLUtil.checkGlError("glUniform1i");
 
@@ -389,10 +416,12 @@ class DrawerImpl implements Object3D {
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Enable a handle to the triangle vertices
+        // 启用三角形顶点的控制柄
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
+        // 准备三角形坐标数据
         obj.getEmissiveTextureCoordsArrayBuffer().position(0);
         GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false, 0,
                 obj.getEmissiveTextureCoordsArrayBuffer());
@@ -403,29 +432,34 @@ class DrawerImpl implements Object3D {
 
     private int setTexture(Object3DData obj, int textureId) {
         // TODO: add emissive texture
+        // TODO:添加发射纹理
         int mTextureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_Texture");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Set the active texture unit to texture unit 0.
+        // 将活动纹理单位设置为纹理单位0。
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLUtil.checkGlError("glActiveTexture");
 
-        if (!obj.getIsDoubleSided()){
+        if (!obj.getIsDoubleSided()) {
             GLES20.glCullFace(GLES20.GL_BACK);
             GLES20.glEnable(GLES20.GL_CULL_FACE);
         }
 
         // Bind to the texture in OpenGL
+        // 在OpenGL中绑定到纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
         GLUtil.checkGlError("glBindTexture");
 
         // set sampling and filtering
+        // 设置采样和过滤
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, obj.getTextureMinFilter());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, obj.getTextureMagFilter());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, obj.getTextureWrapS());
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, obj.getTextureWrapT());
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
+        // 通过绑定到纹理单元0，告诉纹理均匀采样器在着色器中使用此纹理。
         GLES20.glUniform1i(mTextureUniformHandle, 0);
         GLUtil.checkGlError("glUniform1i");
 
@@ -433,10 +467,12 @@ class DrawerImpl implements Object3D {
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Enable a handle to the triangle vertices
+        // 启用三角形顶点的控制柄
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
+        // 准备三角形坐标数据
         obj.getTextureCoordsArrayBuffer().position(0);
         GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false, 0,
                 obj.getTextureCoordsArrayBuffer());
@@ -473,8 +509,10 @@ class DrawerImpl implements Object3D {
     private void setJointTransforms(AnimatedModel animatedModel) {
         float[][] jointTransformsArray = animatedModel.getJointTransforms();
         // get handle to fragment shader's vColor member
+        // 获取片段着色器的vColor成员的句柄
 
         // TODO: optimize this (memory allocation)
+        // TODO:优化（内存分配）
         for (int i = 0; i < jointTransformsArray.length; i++) {
             float[] jointTransform = jointTransformsArray[i];
             // Log.v("DrawerImpl","jointTransform: "+ Arrays.toString(jointTransform));

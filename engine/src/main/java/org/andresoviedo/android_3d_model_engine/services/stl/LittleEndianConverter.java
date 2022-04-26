@@ -22,41 +22,43 @@ import java.io.InputStream;
 
 /**
  * Utility to convert little endain data to big endian data.
+ * 将小端数据转换为大端数据的实用程序。
  * <p>
- * TODO: Extend to convert big endian to little endain data and write to
+ * TODO: Extend to convert big endian to little endain data and write to 扩展转换大端到小端数据和写入
+ *
  * <code>OutputStream</code>
  *
- * @author  Dipl. Ing. Paul Szawlowski -
- *          University of Vienna, Dept. of Medical Computer Sciences
+ * @author Dipl. Ing. Paul Szawlowski -
+ * University of Vienna, Dept. of Medical Computer Sciences
  * @version $Revision: 1.3 $
  */
-public class LittleEndianConverter
-{
+public class LittleEndianConverter {
     /**
      * Converts little endian data in <code>srcBuffer</code> to big endian
      * signed short (2 bytes long) data.
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least 2.
+     * 将<code>srcBuffer</code>中的小端数据转换为大端有符号的短(2字节长)数据。
+     *
+     * @param srcBuffer  Data in little endian format which shall be converted. 需要转换的小数点格式的数据。
+     *                   The size of the array must be at least 2. 数组的大小必须至少为2。
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
+     *                   <code>destBuffer</code>
      * @return (even) number of processed bytes of srcBuffer
      */
     static public int convertToBigEndian
     (
-            final byte[ ]   srcBuffer,
-            final short[ ]  destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength
-    )
-    {
+            final byte[] srcBuffer,
+            final short[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength
+    ) {
         return convertToBigEndian
                 (
                         srcBuffer,
@@ -64,7 +66,7 @@ public class LittleEndianConverter
                         srcLength,
                         destOffset,
                         destLength,
-                        ( short )0xFF
+                        (short) 0xFF
                 );
     }
 
@@ -72,36 +74,36 @@ public class LittleEndianConverter
      * Converts little endian data in <code>srcBuffer</code> to big endian
      * short (2 bytes long) data. Significant bits can be masked, e. g. to
      * get unsigned 7 bit values use <code>0x7F</code> as mask.
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least 2.
+     * 将<code>srcBuffer</code>中的小端数据转换为大端短(2字节长)数据。有效位可以被屏蔽，例如，要获得无符号7位值，可以使用<code>0x7F</code>作为掩码。
+     *
+     * @param srcBuffer  Data in little endian format which shall be converted.
+     *                   The size of the array must be at least 2.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return (even) number of processed bytes of srcBuffer
      */
     static public int convertToBigEndian
     (
-            final byte[ ]   srcBuffer,
-            final short[ ]  destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength,
-            final short     mask
-    )
-    {
-        final int length = Math.min( destLength * 2, ( srcLength / 2 ) * 2 );
-        for( int i = 0; i < length; i += 2 )
-        {
+            final byte[] srcBuffer,
+            final short[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength,
+            final short mask
+    ) {
+        final int length = Math.min(destLength * 2, (srcLength / 2) * 2);
+        for (int i = 0; i < length; i += 2) {
             final int tmp =
-                    ( srcBuffer[ i ] & 0xFF | ( srcBuffer[ i + 1 ] << 8 ) ) & mask;
-            destBuffer[ ( i / 2 ) + destOffset ] = ( short )tmp;
+                    (srcBuffer[i] & 0xFF | (srcBuffer[i + 1] << 8)) & mask;
+            destBuffer[(i / 2) + destOffset] = (short) tmp;
         }
         return length;
     }
@@ -109,28 +111,29 @@ public class LittleEndianConverter
     /**
      * Converts little endian data in <code>srcBuffer</code> to big endian
      * signed integer (4 bytes long) data.
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least 4.
+     * 将<code>srcBuffer</code>中的小端数据转换为大端有符号整数(4字节长)数据。
+     *
+     * @param srcBuffer  Data in little endian format which shall be converted.
+     *                   The size of the array must be at least 4.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Maximum number of data to be written in
-     *      <code>destBuffer</code>
+     *                   <code>destBuffer</code>
      * @return number of processed bytes of srcBuffer (multiple of 4 )
      */
     public static int convertToBigEndian
     (
-            final byte[ ]   srcBuffer,
-            final int[ ]    destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength
-    )
-    {
+            final byte[] srcBuffer,
+            final int[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength
+    ) {
         return convertToBigEndian
                 (
                         srcBuffer,
@@ -146,37 +149,38 @@ public class LittleEndianConverter
      * Converts little endian data in <code>srcBuffer</code> to big endian
      * integer (4 bytes long) data. Significant bits can be masked, e. g. to
      * get unsigned 31 bit values use <code>0x7FFFFFFF</code> as mask.
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least 4.
+     * 将<code>srcBuffer</code>中的小端数据转换为大端整数(4字节长)数据。
+     * 有效位可以被屏蔽，例如，要获得无符号31位值，使用<code>0x7FFFFFFF</code>作为掩码。
+     *
+     * @param srcBuffer  Data in little endian format which shall be converted.
+     *                   The size of the array must be at least 4.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Maximum number of data to be written in
-     *      <code>destBuffer</code>
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return number of processed bytes of srcBuffer (multiple of 4 )
      */
     public static int convertToBigEndian
     (
-            final byte[ ]   srcBuffer,
-            final int[ ]    destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength,
-            final int       mask
-    )
-    {
-        final int length = Math.min( destLength * 4, ( srcLength / 4 ) * 4 );
-        for( int i = 0; i < length; i += 4 )
-        {
-            destBuffer[ ( i / 4 ) + destOffset ] = ( srcBuffer[ i ] & 0xFF
-                    | ( srcBuffer[ i + 1 ] << 8 ) & 0xFF00
-                    | ( srcBuffer[ i + 2 ] << 16 ) & 0xFF0000
-                    | ( srcBuffer[ i + 3 ] << 24 ) ) & mask;
+            final byte[] srcBuffer,
+            final int[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength,
+            final int mask
+    ) {
+        final int length = Math.min(destLength * 4, (srcLength / 4) * 4);
+        for (int i = 0; i < length; i += 4) {
+            destBuffer[(i / 4) + destOffset] = (srcBuffer[i] & 0xFF
+                    | (srcBuffer[i + 1] << 8) & 0xFF00
+                    | (srcBuffer[i + 2] << 16) & 0xFF0000
+                    | (srcBuffer[i + 3] << 24)) & mask;
         }
         return length;
     }
@@ -185,31 +189,32 @@ public class LittleEndianConverter
      * Converts little endian data in <code>srcBuffer</code> to big endian
      * signed integer data with a user defined block size of 2, 3, or 4 bytes.
      * <p>
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least <code>blockSize</code>.
+     * 将<code>srcBuffer</code>中的小端数据转换为用户定义块大小为2,3或4字节的大端带符号整数数据。
+     *
+     * @param srcBuffer  Data in little endian format which shall be converted.
+     *                   The size of the array must be at least <code>blockSize</code>.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Maximum number of data to be written in
-     *      <code>destBuffer</code>
-     * @param blockSize May be 2, 3 or 4.
+     *                   <code>destBuffer</code>
+     * @param blockSize  May be 2, 3 or 4.
      * @return number of processed bytes of srcBuffer (multiple of
-     *      <code>blockSize</code>)
+     * <code>blockSize</code>)
      */
     public static int convertToBigEndian
     (
-            final int       blockSize,
-            final byte[ ]   srcBuffer,
-            final int[ ]    destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength
-    )
-    {
+            final int blockSize,
+            final byte[] srcBuffer,
+            final int[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength
+    ) {
         return convertToBigEndian
                 (
                         blockSize,
@@ -227,60 +232,55 @@ public class LittleEndianConverter
      * signed integer data with a user defined block size of 2, 3, or 4 bytes.
      * Significant bits can be masked, e. g. to get unsigned 16 bit values use
      * <code>0xFFFF</code> as mask.<p>
-     * @param blockSize May be 2, 3 or 4.
-     * @param srcBuffer Data in little endian format which shall be converted.
-     *      The size of the array must be at least <code>blockSize</code>.
+     * 将<code>srcBuffer</code>中的小端数据转换为用户定义块大小为2,3或4字节的大端带符号整数数据。
+     * 有效位可以被屏蔽，例如，要获得无符号的16位值，使用<code>0xFFFF</code>作为掩码
+     *
+     * @param blockSize  May be 2, 3 or 4.
+     * @param srcBuffer  Data in little endian format which shall be converted.
+     *                   The size of the array must be at least <code>blockSize</code>.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
-     * @param srcLength Number of bytes of <code>srcBuffer</code> which shall
-     *      be processed. Must be <= length of <code>srcBuffer</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
+     * @param srcLength  Number of bytes of <code>srcBuffer</code> which shall
+     *                   be processed. Must be <= length of <code>srcBuffer</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Maximum number of data to be written in
-     *      <code>destBuffer</code>
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return number of processed bytes of srcBuffer (multiple of
-     *      <code>blockSize</code>)
+     * <code>blockSize</code>)
      */
     public static int convertToBigEndian
     (
-            final int       blockSize,
-            final byte[ ]   srcBuffer,
-            final int[ ]    destBuffer,
-            final int       srcLength,
-            final int       destOffset,
-            final int       destLength,
-            final int       mask
-    )
-    {
+            final int blockSize,
+            final byte[] srcBuffer,
+            final int[] destBuffer,
+            final int srcLength,
+            final int destOffset,
+            final int destLength,
+            final int mask
+    ) {
         final int length = Math.min
                 (
                         destLength * blockSize,
-                        ( srcLength / blockSize ) * blockSize
+                        (srcLength / blockSize) * blockSize
                 );
-        if( blockSize == 2 )
-        {
-            for( int i = 0; i < length; i += 2 )
-            {
-                destBuffer[ ( i / 2 ) + destOffset ] =
-                        ( srcBuffer[ i ] & 0xFF | ( srcBuffer[ i + 1 ] << 8 ) )
+        if (blockSize == 2) {
+            for (int i = 0; i < length; i += 2) {
+                destBuffer[(i / 2) + destOffset] =
+                        (srcBuffer[i] & 0xFF | (srcBuffer[i + 1] << 8))
                                 & mask;
             }
             return length;
-        }
-        else if( blockSize == 3 )
-        {
-            for( int i = 0; i < length; i += 3 )
-            {
-                destBuffer[ ( i / 3 ) + destOffset ] = ( srcBuffer[ i ] & 0xFF
-                        | ( srcBuffer[ i + 1 ]  << 8 ) & 0xFF00
-                        | ( srcBuffer[ i + 2 ]  << 24 ) )  & mask;
+        } else if (blockSize == 3) {
+            for (int i = 0; i < length; i += 3) {
+                destBuffer[(i / 3) + destOffset] = (srcBuffer[i] & 0xFF
+                        | (srcBuffer[i + 1] << 8) & 0xFF00
+                        | (srcBuffer[i + 2] << 24)) & mask;
             }
             return length;
-        }
-        else if( blockSize == 4 )
-        {
+        } else if (blockSize == 4) {
             return convertToBigEndian
                     (
                             srcBuffer,
@@ -290,9 +290,7 @@ public class LittleEndianConverter
                             destLength,
                             mask
                     );
-        }
-        else
-        {
+        } else {
             return 0;
         }
     }
@@ -300,31 +298,32 @@ public class LittleEndianConverter
     /**
      * Reads little endian data from an <code>InputStream</code> and converts
      * it to big endian signed short (2 bytes long) data.
+     * 从<code>InputStream</code>中读取小端数据，并将其转换为大端有符号短(2字节长)数据。
+     *
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 2)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least 2.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 2)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least 2.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final byte[ ]       readBuffer,
-            final short[ ]      destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream
+            final byte[] readBuffer,
+            final short[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream
     )
-            throws IOException
-    {
+            throws IOException {
         return read
                 (
                         readBuffer,
@@ -332,53 +331,56 @@ public class LittleEndianConverter
                         destOffset,
                         destLength,
                         stream,
-                        ( short )0xFF
+                        (short) 0xFF
                 );
     }
+
     /**
      * Reads little endian data from an <code>InputStream</code> and converts
      * it to big endian short (2 bytes long) data. Significant bits can be
      * masked, e. g. to get unsigned 7 bit values use <code>0x7F</code> as mask.
+     * <p>
+     * 从<code>InputStream</code>中读取小端数据，并将其转换为大端短(2字节长)数据。
+     * 有效位可以被屏蔽，例如，要获得无符号7位值，可以使用<code>0x7F</code>作为掩码。
+     *
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 2)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least 2.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 2)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least 2.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final byte[ ]       readBuffer,
-            final short[ ]      destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream,
-            final short         mask
+            final byte[] readBuffer,
+            final short[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream,
+            final short mask
     )
-            throws IOException
-    {
+            throws IOException {
         int numOfBytesRead = 0;
         int numOfData = 0;
         int offset = 0;
-        final int length = ( readBuffer.length / 2 ) * 2;
-        while( ( numOfBytesRead >= 0 ) && ( numOfData < destLength ) )
-        {
+        final int length = (readBuffer.length / 2) * 2;
+        while ((numOfBytesRead >= 0) && (numOfData < destLength)) {
             // calculate how many more bytes can be read so that destBuffer
             // does not overflow; enables to continue reading from same stream
             // without data loss
             final int maxBytesToRead =
-                    Math.min( ( destLength - numOfData ) * 2, length );
+                    Math.min((destLength - numOfData) * 2, length);
             numOfBytesRead =
-                    stream.read( readBuffer, offset, maxBytesToRead - offset );
+                    stream.read(readBuffer, offset, maxBytesToRead - offset);
             int numOfProcessedBytes = convertToBigEndian
                     (
                             readBuffer,
@@ -389,16 +391,13 @@ public class LittleEndianConverter
                             mask
                     );
             // if an uneven number of bytes was read from stream
-            if( numOfBytesRead - numOfProcessedBytes == 1 )
-            {
+            if (numOfBytesRead - numOfProcessedBytes == 1) {
                 offset = 1;
-                readBuffer[ 0 ] = readBuffer[ numOfProcessedBytes ];
-            }
-            else
-            {
+                readBuffer[0] = readBuffer[numOfProcessedBytes];
+            } else {
                 offset = 0;
             }
-            numOfData += ( numOfProcessedBytes / 2 );
+            numOfData += (numOfProcessedBytes / 2);
         }
         return numOfData;
     }
@@ -406,31 +405,32 @@ public class LittleEndianConverter
     /**
      * Reads little endian data from an <code>InputStream</code> and converts
      * it to big endian signed int (4 bytes long) data.
+     * 从<code>InputStream</code>中读取小端数据，并将其转换为大端signed int(4字节长)数据。
+     *
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 4)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least 4.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 4)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least 4.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final byte[ ]       readBuffer,
-            final int[ ]        destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream
     )
-            throws IOException
-    {
+            throws IOException {
         return read
                 (
                         readBuffer,
@@ -446,46 +446,46 @@ public class LittleEndianConverter
      * Reads little endian data from an <code>InputStream</code> and converts
      * it to big endian int (4 bytes long) data. Significant bits can be masked,
      * e. g. to get unsigned 31 bit values use <code>0x7FFFFFFF</code> as mask.
+     * 从<code>InputStream</code>中读取小端数据，并将其转换为大端int(4字节长)数据。有效位可以被屏蔽，例如，要获得无符号31位值，使用<code>0x7FFFFFFF</code>作为掩码。
+     *
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 4)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least 4.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 4)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least 4.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final byte[ ]       readBuffer,
-            final int[ ]        destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream,
-            final int           mask
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream,
+            final int mask
     )
-            throws IOException
-    {
+            throws IOException {
         int numOfBytesRead = 0;
         int numOfData = 0;
         int offset = 0;
-        final int length = ( readBuffer.length / 4 ) * 4;
-        while( ( numOfBytesRead >= 0 ) && ( numOfData < destLength ) )
-        {
+        final int length = (readBuffer.length / 4) * 4;
+        while ((numOfBytesRead >= 0) && (numOfData < destLength)) {
             // calculate how many more bytes can be read so that destBuffer
             // does not overflow; enables to continue reading from same stream
             // without data loss
             final int maxBytesToRead =
-                    Math.min( ( destLength - numOfData ) * 4, length );
+                    Math.min((destLength - numOfData) * 4, length);
             numOfBytesRead =
-                    stream.read( readBuffer, offset, maxBytesToRead - offset );
+                    stream.read(readBuffer, offset, maxBytesToRead - offset);
             int numOfProcessedBytes = convertToBigEndian
                     (
                             readBuffer,
@@ -499,22 +499,19 @@ public class LittleEndianConverter
             // if an number of bytes was read from stream was not a multiple
             // of 4
             offset = 0;
-            if(diff == 1 )
-            {
+            if (diff == 1) {
                 offset = 1;
-                readBuffer[ 0 ] = readBuffer[ numOfProcessedBytes ];
+                readBuffer[0] = readBuffer[numOfProcessedBytes];
             }
-            if( diff == 2 )
-            {
+            if (diff == 2) {
                 offset = 2;
-                readBuffer[ 1 ] = readBuffer[ numOfProcessedBytes + 1 ];
+                readBuffer[1] = readBuffer[numOfProcessedBytes + 1];
             }
-            if( diff == 3 )
-            {
+            if (diff == 3) {
                 offset = 3;
-                readBuffer[ 2 ] = readBuffer[ numOfProcessedBytes + 2 ];
+                readBuffer[2] = readBuffer[numOfProcessedBytes + 2];
             }
-            numOfData += ( numOfProcessedBytes / 4 );
+            numOfData += (numOfProcessedBytes / 4);
         }
         return numOfData;
     }
@@ -523,33 +520,34 @@ public class LittleEndianConverter
      * Reads little endian data from an <code>InputStream</code> and converts
      * it to to big endian signed integer data with a user defined block size
      * of 1, 2, 3, or 4 bytes (1 is here for conveniance).<p>
-     * @param blockSize May be 1, 2, 3 or 4.
+     * 从<code>InputStream</code>中读取小端数据，并将其转换为大端有符号整数数据，用户定义块大小为1,2,3或4字节(这里用1是为了方便)
+     *
+     * @param blockSize  May be 1, 2, 3 or 4.
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 4)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least <code>blockSize</code>.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 4)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least <code>blockSize</code>.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final int           blockSize,
-            final byte[ ]       readBuffer,
-            final int[ ]        destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream
+            final int blockSize,
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream
     )
-            throws IOException
-    {
+            throws IOException {
         return read
                 (
                         blockSize,
@@ -568,37 +566,38 @@ public class LittleEndianConverter
      * of 1, 2, 3, or 4 bytes (1 is here for conveniance). Significant bits can
      * be masked, e. g. to get unsigned 16 bit values use <code>0xFFFF</code>
      * as mask.<p>
-     * @param blockSize May be 1, 2, 3 or 4.
+     * 从<code>InputStream</code>中读取小尾数数据，并将其转换为具有用户定义块大小为1、2、3或4字节的大尾数有符号整数数据(这里使用1是为了方便)。
+     * 有效位可以被屏蔽，例如，要获得无符号的16位值，使用<code>0xFFFF</code>作为掩码
+     *
+     * @param blockSize  May be 1, 2, 3 or 4.
      * @param readBuffer Auxilary Buffer to be used to read from
-     *      <code>stream</code>. Choose an appropriate size (multiple of 4)
-     *      depending on the size of the stream. The size of the array must be
-     *      at least <code>blockSize</code>.
+     *                   <code>stream</code>. Choose an appropriate size (multiple of 4)
+     *                   depending on the size of the stream. The size of the array must be
+     *                   at least <code>blockSize</code>.
      * @param destBuffer Buffer to store the converted data. The size of the
-     *      array must be at least <code>destOffset</code> +
-     *      <code>destLength</code>.
+     *                   array must be at least <code>destOffset</code> +
+     *                   <code>destLength</code>.
      * @param destOffset Offset for writing converted data in
-     *      <code>destBuffer</code>.
+     *                   <code>destBuffer</code>.
      * @param destLength Max. number of data to be written in
-     *      <code>destBuffer</code>
-     * @param stream <code>InputStream</code> to read from.
-     * @param mask Mask for significant bits. Set significant bits to 1.
+     *                   <code>destBuffer</code>
+     * @param stream     <code>InputStream</code> to read from.
+     * @param mask       Mask for significant bits. Set significant bits to 1.
      * @return number of data elements written in <code>destBuffer</code>
-     *      (will be <= destLength).
+     * (will be <= destLength).
      */
     public static int read
     (
-            final int           blockSize,
-            final byte[ ]       readBuffer,
-            final int[ ]        destBuffer,
-            final int           destOffset,
-            final int           destLength,
-            final InputStream   stream,
-            final int           mask
+            final int blockSize,
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream,
+            final int mask
     )
-            throws IOException
-    {
-        if( blockSize == 2 )
-        {
+            throws IOException {
+        if (blockSize == 2) {
             return read2ByteBlock
                     (
                             readBuffer,
@@ -608,9 +607,7 @@ public class LittleEndianConverter
                             stream,
                             mask
                     );
-        }
-        else if( blockSize == 3 )
-        {
+        } else if (blockSize == 3) {
             return read3ByteBlock
                     (
                             readBuffer,
@@ -620,9 +617,7 @@ public class LittleEndianConverter
                             stream,
                             mask
                     );
-        }
-        else if( blockSize == 4 )
-        {
+        } else if (blockSize == 4) {
             return read
                     (
                             readBuffer,
@@ -632,80 +627,94 @@ public class LittleEndianConverter
                             stream,
                             mask
                     );
-        }
-        else
-        {
+        } else {
             return 0;
         }
     }
 
     /**
      * Reads 4 bytes in little endian format and converts it to a signed int.<p>
+     * 以小数点格式读取4个字节，并将其转换为signed int
+     *
      * @throws IOException if EOF occurs and only one, 2 or 3 bytes were read or
-     *      if error during reading occurs
+     *                     if error during reading occurs
      */
-    public static int read4ByteBlock( final InputStream stream )
-            throws java.io.IOException
-    {
-        return read( stream ) & 0xFF
-                | ( read( stream ) << 8 ) & 0xFF00
-                | ( read( stream ) << 16 ) & 0xFF0000
-                | ( read( stream ) << 24 );
+    public static int read4ByteBlock(final InputStream stream)
+            throws IOException {
+        return read(stream) & 0xFF
+                | (read(stream) << 8) & 0xFF00
+                | (read(stream) << 16) & 0xFF0000
+                | (read(stream) << 24);
     }
 
     /**
      * Reads 2 bytes in little endian format and converts it to a signed int.<p>
      * To Convert it to an unsigned int <code>&</code> the result with
      * <code>0xFFFF</code>.
+     * 以小数点格式读取2个字节，并将其转换为signed int。
+     * 将其转换为unsigned int <code>&</code>，结果为<code>0xFFFF</code>。
+     *
      * @throws IOException if EOF occurs and only one bytes was read or
-     *      if error during reading occurs
+     *                     if error during reading occurs
+     *                     如果发生EOF并且只读取了一个字节，或者在读取过程中发生错误
      */
-    public static int read2ByteBlock( final InputStream stream )
-            throws java.io.IOException
-    {
-        return read( stream ) & 0xFF
-                | ( read( stream ) << 8 );
+    public static int read2ByteBlock(final InputStream stream)
+            throws IOException {
+        return read(stream) & 0xFF
+                | (read(stream) << 8);
     }
 
     /**
      * Reads 3 bytes in little endian format and converts it to a signed int.<p>
      * To Convert it to an unsigned int <code>&</code> the result with
      * <code>0xFFFFFF</code>.
+     * 以小尾数格式读取3个字节，并将其转换为signed int。<code>0xFFFFFF</code>将其转换为unsigned int <code>&</code>
+     *
      * @throws IOException if EOF occurs and only one or 2 bytes were read or
-     *      if error during reading occurs
+     *                     if error during reading occurs
+     *                     如果发生EOF并且只读取了一个或两个字节，或者在读取过程中发生错误
      */
-    public static int read3ByteBlock( final InputStream stream )
-            throws java.io.IOException
-    {
-        return read( stream ) & 0xFF
-                | ( read( stream ) << 8 ) & 0xFF00
-                | ( read( stream ) << 16 );
+    public static int read3ByteBlock(final InputStream stream)
+            throws IOException {
+        return read(stream) & 0xFF
+                | (read(stream) << 8) & 0xFF00
+                | (read(stream) << 16);
     }
 
+    /**
+     * 读2字节块
+     *
+     * @param readBuffer
+     * @param destBuffer
+     * @param destOffset
+     * @param destLength
+     * @param stream
+     * @param mask
+     * @return
+     * @throws IOException
+     */
     private static int read2ByteBlock
-            (
-                    final byte[ ]       readBuffer,
-                    final int[ ]        destBuffer,
-                    final int           destOffset,
-                    final int           destLength,
-                    final InputStream   stream,
-                    final int           mask
-            )
-            throws IOException
-    {
+    (
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream,
+            final int mask
+    )
+            throws IOException {
         int numOfBytesRead = 0;
         int numOfData = 0;
         int offset = 0;
-        final int length = ( readBuffer.length / 2 ) * 2;
-        while( ( numOfBytesRead >= 0 ) && ( numOfData < destLength ) )
-        {
+        final int length = (readBuffer.length / 2) * 2;
+        while ((numOfBytesRead >= 0) && (numOfData < destLength)) {
             // calculate how many more bytes can be read so that destBuffer
             // does not overflow; enables to continue reading from same stream
             // without data loss
             final int maxBytesToRead =
-                    Math.max( ( destLength - numOfData ) * 2, length );
+                    Math.max((destLength - numOfData) * 2, length);
             numOfBytesRead =
-                    stream.read( readBuffer, offset, maxBytesToRead - offset );
+                    stream.read(readBuffer, offset, maxBytesToRead - offset);
             int numOfProcessedBytes = convertToBigEndian
                     (
                             2,
@@ -717,44 +726,52 @@ public class LittleEndianConverter
                             mask
                     );
             // if an uneven number of bytes was read from stream
-            if( numOfBytesRead - numOfProcessedBytes == 1 )
-            {
+            if (numOfBytesRead - numOfProcessedBytes == 1) {
                 offset = 1;
-                readBuffer[ 0 ] = readBuffer[ numOfProcessedBytes ];
-            }
-            else
-            {
+                readBuffer[0] = readBuffer[numOfProcessedBytes];
+            } else {
                 offset = 0;
             }
-            numOfData += ( numOfProcessedBytes / 2 );
+            numOfData += (numOfProcessedBytes / 2);
         }
         return numOfData;
     }
 
+    /**
+     * 读3字节块
+     *
+     * @param readBuffer
+     * @param destBuffer
+     * @param destOffset
+     * @param destLength
+     * @param stream
+     * @param mask
+     * @return
+     * @throws IOException
+     */
     private static int read3ByteBlock
-            (
-                    final byte[ ]       readBuffer,
-                    final int[ ]        destBuffer,
-                    final int           destOffset,
-                    final int           destLength,
-                    final InputStream   stream,
-                    final int           mask
-            )
-            throws IOException
-    {
+    (
+            final byte[] readBuffer,
+            final int[] destBuffer,
+            final int destOffset,
+            final int destLength,
+            final InputStream stream,
+            final int mask
+    )
+            throws IOException {
         int numOfBytesRead = 0;
         int numOfData = 0;
         int offset = 0;
-        final int length = ( readBuffer.length / 3 ) * 3;
-        while( ( numOfBytesRead >= 0 ) && ( numOfData < destLength ) )
-        {
+        final int length = (readBuffer.length / 3) * 3;
+        while ((numOfBytesRead >= 0) && (numOfData < destLength)) {
             // calculate how many more bytes can be read so that destBuffer
-            // does not overflow; enables to continue reading from same stream
-            // without data loss
+            // 计算还有多少字节可以读取，以便destBuffer
+            // does not overflow; enables to continue reading from same stream  without data loss
+            // 不溢出;允许继续从相同流读取而不丢失数据
             final int maxBytesToRead =
-                    Math.max( ( destLength - numOfData ) * 3, length );
+                    Math.max((destLength - numOfData) * 3, length);
             numOfBytesRead =
-                    stream.read( readBuffer, offset, maxBytesToRead - offset );
+                    stream.read(readBuffer, offset, maxBytesToRead - offset);
             int numOfProcessedBytes = convertToBigEndian
                     (
                             3,
@@ -769,27 +786,30 @@ public class LittleEndianConverter
             // if an number of bytes was read from stream was not a multiple
             // of 3
             offset = 0;
-            if(diff == 1 )
-            {
+            if (diff == 1) {
                 offset = 1;
-                readBuffer[ 0 ] = readBuffer[ numOfProcessedBytes ];
+                readBuffer[0] = readBuffer[numOfProcessedBytes];
             }
-            if( diff == 2 )
-            {
+            if (diff == 2) {
                 offset = 2;
-                readBuffer[ 1 ] = readBuffer[ numOfProcessedBytes + 1 ];
+                readBuffer[1] = readBuffer[numOfProcessedBytes + 1];
             }
-            numOfData += ( numOfProcessedBytes / 3 );
+            numOfData += (numOfProcessedBytes / 3);
         }
         return numOfData;
     }
 
-    private static int read( final InputStream stream ) throws IOException
-    {
-        final int tempValue = stream.read( );
-        if( tempValue == -1 )
-        {
-            throw new IOException( "Filesize does not match blocksize" );
+    /**
+     * 读取
+     *
+     * @param stream
+     * @return
+     * @throws IOException
+     */
+    private static int read(final InputStream stream) throws IOException {
+        final int tempValue = stream.read();
+        if (tempValue == -1) {
+            throw new IOException("Filesize does not match blocksize");
         }
         return tempValue;
     }
