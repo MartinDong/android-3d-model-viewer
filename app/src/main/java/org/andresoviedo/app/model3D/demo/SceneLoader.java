@@ -175,7 +175,6 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     public void init() {
-
         // Camera to show a point of view
         // 显示视角的摄像机
         camera = new Camera();
@@ -189,6 +188,7 @@ public class SceneLoader implements LoaderTask.Callback {
 
         startTime = SystemClock.uptimeMillis();
         Uri uri = parent.getParamUri();
+        // 根据不同的文件后缀，使用不容的3D模型加载器
         Log.i("Object3DBuilder", "Loading model " + uri + ". async and parallel..");
         if (uri.toString().toLowerCase().endsWith(".obj") || parent.getParamType() == 0) {
             new WavefrontLoaderTask(parent, uri, this).execute();
@@ -201,7 +201,6 @@ public class SceneLoader implements LoaderTask.Callback {
         } else if (uri.toString().toLowerCase().endsWith(".gltf") || parent.getParamType() == 3) {
             Log.i("Object3DBuilder", "Loading GLtf object from: " + uri);
             new GltfLoaderTask(parent, uri, this).execute();
-
         }
     }
 

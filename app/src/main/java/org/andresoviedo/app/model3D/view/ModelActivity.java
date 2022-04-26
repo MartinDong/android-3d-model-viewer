@@ -94,7 +94,7 @@ public class ModelActivity extends Activity {
             gLView = new ModelSurfaceView(this);
             setContentView(gLView);
         } catch (Exception e) {
-            Toast.makeText(this, "Error loading OpenGL view:\n" +e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error loading OpenGL view:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         // Show the Up button in the action bar.
@@ -201,7 +201,7 @@ public class ModelActivity extends Activity {
         } else {
             showSystemUI();
         }
-        Toast.makeText(this, "Fullscreen " +this.immersiveMode, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Fullscreen " + this.immersiveMode, Toast.LENGTH_SHORT).show();
     }
 
     private void hideSystemUIDelayed() {
@@ -280,6 +280,7 @@ public class ModelActivity extends Activity {
             return;
         }
         switch (requestCode) {
+            // 从指定路径加载纹理
             case REQUEST_CODE_LOAD_TEXTURE:
                 // The URI of the selected file
                 final Uri uri = data.getData();
